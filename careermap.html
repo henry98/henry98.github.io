@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的職涯探索地圖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Slate, Stone, Amber) -->
+    <!-- Application Structure Plan: A single-page dashboard application designed for personal decision-making. The structure prioritizes a task-oriented flow over mirroring the report's linear format. The user (the son) can navigate between distinct, self-contained sections: 1. 'Start Here' to reframe his background as a strength. 2. 'Explore Paths' for a deep, interactive comparison of Education vs. Workforce. 3. 'Action Plan' providing concrete next steps (building a portfolio). 4. 'Summary' for a clear final recommendation. This non-linear, modular structure allows the user to explore options based on his own priorities and mental model, making the complex information more digestible and empowering him to make an informed choice. -->
+    <!-- Visualization & Content Choices: 1. Annual Cost Comparison (Goal: Compare, Method: Grouped Bar Chart - Chart.js): To visually contrast the significant financial differences between studying in Taiwan and Singapore (with/without grant), making the trade-offs immediately apparent. 2. Salary Progression (Goal: Show Change/Growth, Method: Bar Chart - Chart.js): To illustrate the financial viability and growth potential of the UI/UX career path in Taiwan, providing a clear incentive. 3. University/Path Comparison (Goal: Compare/Organize, Method: Interactive Cards & Tables - HTML/CSS/JS): To present dense information about schools and job paths in a scannable, digestible format, allowing for easy side-by-side evaluation. 4. Portfolio Projects (Goal: Organize/Inform, Method: Interactive Checklist/Cards - HTML/CSS/JS): To transform the abstract task of "building a portfolio" into a concrete, actionable plan. All choices are designed to support the dashboard structure and facilitate decision-making. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            border-bottom-color: #f59e0b; /* amber-500 */
+            color: #1e293b; /* slate-800 */
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-2">你的職涯探索地圖</h1>
+            <p class="text-lg text-slate-500">一份為你量身打造的互動式策略分析</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-slate-200 mb-8">
+            <a href="#start" class="nav-link active text-slate-600 font-semibold py-4 px-6" data-section="start">第一站：你的獨特優勢</a>
+            <a href="#paths" class="nav-link text-slate-600 font-semibold py-4 px-6" data-section="paths">第二站：探索未來路徑</a>
+            <a href="#action" class="nav-link text-slate-600 font-semibold py-4 px-6" data-section="action">第三站：立即行動方案</a>
+            <a href="#summary" class="nav-link text-slate-600 font-semibold py-4 px-6" data-section="summary">最終站：策略總結</a>
+        </nav>
+
+        <main>
+            <!-- Section: Start Here -->
+            <section id="start" class="section active">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">你的轉折，就是你的優勢</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-slate-600">你過去的每一步，都沒有白走。UBC的資訊工程背景，加上你對視覺藝術的熱情，這不是一個矛盾，而是一個在當今市場上極度稀缺的超能力組合。讓我們來看看，這個「懂技術的藝術家」身份，能為你打開哪些大門。</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">UI/UX 設計</h3>
+                        <p>這不只是畫圖，更是關於邏輯與解決問題。你的CS背景讓你比純設計師更能理解技術限制，提出更可行的創新方案。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">互動媒體設計</h3>
+                        <p>你的程式能力，可以讓靜態的設計「動」起來。從互動網頁到裝置藝術，你可以創造需要程式碼驅動的沉浸式體驗。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">創意程式與生成藝術</h3>
+                        <p>一個最能直接融合你過去與現在興趣的前沿領域。用p5.js或Processing等工具，直接以程式碼作為創作的媒介。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">動畫與視覺特效</h3>
+                        <p>在3D動畫和電影特效的世界裡，技術力就是你的創作自由度。理解演算法和腳本，能讓你比別人走得更遠。</p>
+                    </div>
+                </div>
+                <div class="mt-10 p-6 bg-amber-50 border border-amber-200 rounded-lg text-center">
+                    <p class="text-xl font-semibold text-amber-800">你的最大價值：成為設計與工程團隊之間的「關鍵翻譯官」，加速產品開發，提升最終品質。</p>
+                </div>
+            </section>
+
+            <!-- Section: Paths -->
+            <section id="paths" class="section">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">兩條路徑，一個未來</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-slate-600">接下來，你可以選擇重返校園，把專業基礎打得更深；也可以直接投入職場，在實戰中累積經驗。這兩條路沒有絕對的好壞，只有適不適合。這裡的資料能幫助你做出比較。</p>
+                </div>
+                <div class="flex justify-center mb-8">
+                    <div class="bg-slate-200 p-1 rounded-lg flex space-x-1">
+                        <button class="path-toggle active btn bg-white text-slate-800 font-semibold py-2 px-6 rounded-md" data-path="education">重返校園</button>
+                        <button class="path-toggle btn text-slate-600 font-semibold py-2 px-6 rounded-md" data-path="work">直接就業</button>
+                    </div>
+                </div>
+
+                <!-- Sub-section: Education -->
+                <div id="education-path" class="path-content active">
+                    <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+                        <div class="flex justify-center mb-6">
+                             <div class="bg-slate-100 p-1 rounded-lg flex space-x-1">
+                                <button class="country-toggle active btn bg-white text-slate-800 font-semibold py-2 px-4 rounded-md" data-country="sg">星國深造 (國際視野)</button>
+                                <button class="country-toggle btn text-slate-600 font-semibold py-2 px-4 rounded-md" data-country="tw">台灣扎根 (CP值高)</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Singapore Content -->
+                        <div id="sg-content" class="country-content active">
+                            <p class="text-center mb-6 text-slate-600">新加坡提供高度國際化的環境，能最大化你的英語和IB文憑優勢。畢業後有機會直接與全球產業接軌。</p>
+                            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                                <div class="card p-6 border-l-4 border-amber-500">
+                                    <h4 class="font-bold text-xl mb-2">拉薩爾藝術學院 (LASALLE)</h4>
+                                    <p><strong>風格：</strong>概念性、實驗性，強調批判思維。</p>
+                                    <p><strong>學制：</strong>三年制榮譽學士學位。</p>
+                                    <p><strong>適合：</strong>有強烈自我驅動力的你，探索藝術與科技的邊界。</p>
+                                </div>
+                                <div class="card p-6 border-l-4 border-slate-500">
+                                    <h4 class="font-bold text-xl mb-2">南洋藝術學院 (NAFA)</h4>
+                                    <p><strong>風格：</strong>技術本位，注重扎實的基礎技能。</p>
+                                    <p><strong>學制：</strong>三年制文憑 + 一年制學位。</p>
+                                    <p><strong>優勢：</strong>文憑課程含<strong class="text-amber-600">強制實習</strong>，對缺乏經驗的你極有價值。</p>
+                                </div>
+                            </div>
+                            <div class="bg-amber-50 p-4 rounded-lg mb-8">
+                                <h4 class="font-bold text-lg text-amber-800 mb-2">關鍵機會：學費津貼 (Tuition Grant) & 三年服務合約</h4>
+                                <p class="text-amber-700">這是新加坡政府提供的補助，能大幅降低學費。代價是畢業後需為新加坡公司工作三年。但請將此視為一個「政府擔保的職涯啟動器」，它能確保你畢業後無縫接軌進入專業領域，有效降低初期的不確定性。</p>
+                            </div>
+                        </div>
+
+                        <!-- Taiwan Content -->
+                        <div id="tw-content" class="country-content">
+                             <p class="text-center mb-6 text-slate-600">台灣的設計教育體系成熟，學費與生活成本相對較低，能在熟悉的環境中重新建立學術自信。</p>
+                            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                                <div class="card p-6 border-l-4 border-amber-500">
+                                    <h4 class="font-bold text-xl mb-2">實踐大學 (設計學院)</h4>
+                                    <p><strong>風格：</strong>概念創新、跨領域整合，設計界聲譽卓著。</p>
+                                    <p><strong>優勢：</strong>業界連結深，校友網絡強大。</p>
+                                </div>
+                                <div class="card p-6 border-l-4 border-slate-500">
+                                    <h4 class="font-bold text-xl mb-2">國立臺灣藝術大學</h4>
+                                    <p><strong>風格：</strong>藝術底蘊深厚，強調創作實踐。</p>
+                                    <p><strong>優勢：</strong>傳統藝術名校，資源豐富。</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg mb-8">
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">現實評估：入學管道 & 學分抵免</h4>
+                                <p class="text-slate-700">你的IB及UBC學歷，透過「境外生」或「轉學生」管道申請極具優勢。但學分抵免希望不大，因科系差異過大，要有從大一或大二讀起的心理準備。</p>
+                            </div>
+                        </div>
+
+                        <h4 class="text-2xl font-bold text-slate-800 text-center mb-4">年度開銷大比較 (不含住宿)</h4>
+                        <div class="chart-container">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-section: Work -->
+                <div id="work-path" class="path-content">
+                    <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-4">選項A: 在台灣就業 (UI/UX 設計師)</h3>
+                                <p class="mb-4">這是你最能發揮綜合優勢的切入點。你的技術背景是相較於其他設計畢業生的巨大加分項。</p>
+                                <div class="mb-6">
+                                    <h4 class="font-semibold text-lg mb-2">薪資成長潛力 (月薪)</h4>
+                                    <div class="chart-container" style="height: 250px; max-height:300px;">
+                                        <canvas id="salaryChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-lg">
+                                    <h5 class="font-bold text-slate-800">優勢</h5>
+                                    <p class="text-slate-700">立即有收入、在實戰中學習、職涯路徑明確。</p>
+                                    <h5 class="font-bold text-slate-800 mt-2">挑戰</h5>
+                                    <p class="text-slate-700">需要一份極強的作品集來敲開大門。</p>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-4">選項B: 自由接案 (國際市場)</h3>
+                                <p class="mb-4">利用你的英語優勢，在Upwork等國際平台接案，將自己定位為高價值的「創意技術專家」。</p>
+                                <div class="mb-6">
+                                    <h4 class="font-semibold text-lg mb-2">潛在時薪 (美金)</h4>
+                                    <ul class="space-y-2">
+                                        <li class="flex justify-between items-center"><span>平面設計 (入門)</span> <span class="font-bold text-amber-600">$15 - $35</span></li>
+                                        <li class="flex justify-between items-center"><span>UI/UX 設計</span> <span class="font-bold text-amber-600">$25 - $40+</span></li>
+                                        <li class="flex justify-between items-center"><span>互動網頁開發</span> <span class="font-bold text-amber-600">$20 - $50+</span></li>
+                                    </ul>
+                                </div>
+                                <div class="bg-amber-50 p-4 rounded-lg">
+                                    <h5 class="font-bold text-amber-800">優勢</h5>
+                                    <p class="text-amber-700">極大的彈性、潛在收入高、直接與國際客戶合作。</p>
+                                    <h5 class="font-bold text-amber-800 mt-2">挑戰</h5>
+                                    <p class="text-amber-700">對自律性、商務能力要求極高，收入不穩定，心理壓力大。不建議作為第一步。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Action Plan -->
+            <section id="action" class="section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">你的第一步：打造跨領域作品集</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-slate-600">無論你選擇哪條路，一份高品質的作品集都是入場券。這是你當下最優先、最核心的任務。這裡有四個專案構想，能充分展現你的獨特優勢。</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">1. 個人作品集網站</h3>
+                        <p><strong>目標：</strong>同時展示設計品味與技術實力。</p>
+                        <p><strong>做法：</strong>放棄模板網站，運用你在UBC學到的HTML/CSS/JS技能，從零開始打造自己的網站。這本身就是一個最強的作品。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">2. UI/UX 案例研究</h3>
+                        <p><strong>目標：</strong>證明你理解設計背後的「為何做」。</p>
+                        <p><strong>做法：</strong>挑選一個你覺得體驗不佳的App，重新設計。重點是記錄完整流程：研究、問題定義、流程圖、原型製作及最終方案。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">3. 創意程式設計作品</h3>
+                        <p><strong>目標：</strong>最直接地展示你融合程式與創意的能力。</p>
+                        <p><strong>做法：</strong>使用p5.js或Processing，創作一件生成藝術或一個小型互動網頁動畫，將你定位在更前沿的市場。</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-2 text-amber-600">4. 虛構品牌識別專案</h3>
+                        <p><strong>目標：</strong>展現完整的品牌策略思維。</p>
+                        <p><strong>做法：</strong>為一個自創的公司設計Logo、色彩系統和品牌規範，並應用到網站、名片等多個模擬場景中。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Summary -->
+            <section id="summary" class="section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">策略總結與建議</h2>
+                    <p class="max-w-3xl mx-auto text-lg text-slate-600">綜合所有分析，這裡有最核心的策略建議。這不是標準答案，而是基於數據和對你情況的理解，所提出的最具潛力的方向。</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-xl max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="p-6 bg-amber-50 rounded-lg border-2 border-amber-500">
+                            <h3 class="text-2xl font-bold text-amber-800 mb-3">主要建議：新加坡升學</h3>
+                            <p class="mb-4">將那份三年服務期合約，視為一個黃金跳板。</p>
+                            <ul class="list-disc list-inside space-y-2 text-amber-900">
+                                <li><strong>理由：</strong>你需要一個結構化的環境來重建自信，而新加坡的藝術院校提供了這一點。</li>
+                                <li><strong>NAFA的優勢：</strong>扎實的技術訓練和強制實習，能有效彌補你實作經驗的不足。</li>
+                                <li><strong>長期價值：</strong>最大化利用你的IB和英語優勢，為你提供最高的國際發展天花板。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="p-6 bg-slate-50 rounded-lg mb-6">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">次要/並行建議</h3>
+                                <p>無論如何，<strong>立即啟動你的作品集建構計畫</strong>。這是所有未來機會的敲門磚，也是讓你動起來、找回節奏的最好方法。</p>
+                            </div>
+                             <div class="p-6 bg-slate-50 rounded-lg">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">備選方案</h3>
+                                <p>如果財務是主要考量，<strong>在台灣頂尖設計院校升學</strong>是性價比極高的選擇。關鍵在於入學後必須保持極強的主動性，積極爭取國際連結的機會。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center text-slate-600">
+                        <p class="text-lg">兒子，你過去的路沒有一步是白走的。你擁有的「技術腦」和「藝術眼」，是別人學不來的獨特武器。抬起頭，充滿自信地去運用它吧。</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="mt-12 pt-8 border-t border-slate-200 text-center text-slate-500">
+            <p class="font-bold mb-4">相關資源連結</p>
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <a href="https://www.ntua.edu.tw" target="_blank" class="hover:text-amber-600">臺藝大</a>
+                <a href="http://www.usc.edu.tw" target="_blank" class="hover:text-amber-600">實踐大學</a>
+                <a href="https://www.lasalle.edu.sg" target="_blank" class="hover:text-amber-600">LASALLE</a>
+                <a href="https://www.nafa.edu.sg" target="_blank" class="hover:text-amber-600">NAFA</a>
+                <a href="https://www.104.com.tw" target="_blank" class="hover:text-amber-600">104人力銀行</a>
+                <a href="https://www.upwork.com" target="_blank" class="hover:text-amber-600">Upwork</a>
+                <a href="https://www.behance.net" target="_blank" class="hover:text-amber-600">Behance</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href').substring(1);
+
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    this.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+
+            const pathToggles = document.querySelectorAll('.path-toggle');
+            const pathContents = document.querySelectorAll('.path-content');
+
+            pathToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const pathId = this.dataset.path;
+
+                    pathToggles.forEach(t => {
+                        t.classList.remove('active', 'bg-white', 'text-slate-800');
+                        t.classList.add('text-slate-600');
+                    });
+                    this.classList.add('active', 'bg-white', 'text-slate-800');
+                    this.classList.remove('text-slate-600');
+
+                    pathContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${pathId}-path`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            const countryToggles = document.querySelectorAll('.country-toggle');
+            const countryContents = document.querySelectorAll('.country-content');
+
+            countryToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const countryId = this.dataset.country;
+
+                    countryToggles.forEach(t => {
+                        t.classList.remove('active', 'bg-white', 'text-slate-800');
+                        t.classList.add('text-slate-600');
+                    });
+                    this.classList.add('active', 'bg-white', 'text-slate-800');
+                    this.classList.remove('text-slate-600');
+
+                    countryContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${countryId}-content`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(value);
+            };
+
+            const costData = {
+                labels: ['台灣院校', '新加坡院校 (有補助)', '新加坡院校 (無補助)'],
+                datasets: [{
+                    label: '預估年開銷 (新台幣)',
+                    data: [272000, 443000, 750000], // Average of ranges, and calculated full fee for NAFA
+                    backgroundColor: [
+                        'rgba(51, 65, 85, 0.7)', // slate-700
+                        'rgba(245, 158, 11, 0.7)', // amber-500
+                        'rgba(245, 158, 11, 0.4)'  // amber-400
+                    ],
+                    borderColor: [
+                        'rgb(51, 65, 85)',
+                        'rgb(245, 158, 11)',
+                        'rgb(245, 158, 11)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            new Chart(costCtx, {
+                type: 'bar',
+                data: costData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return 'NT$ ' + (value / 1000) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const salaryData = {
+                labels: ['入門 (0-1年)', '中階 (1-3年)', '資深 (5-10年)'],
+                datasets: [{
+                    label: '月薪中位數 (新台幣)',
+                    data: [40000, 55000, 72000],
+                    backgroundColor: 'rgba(51, 65, 85, 0.7)',
+                    borderColor: 'rgb(51, 65, 85)',
+                    borderWidth: 1
+                }]
+            };
+
+            const salaryCtx = document.getElementById('salaryChart').getContext('2d');
+            new Chart(salaryCtx, {
+                type: 'bar',
+                data: salaryData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                         tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += formatCurrency(context.parsed.x);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return 'NT$ ' + (value / 1000) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
